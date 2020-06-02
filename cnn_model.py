@@ -9,7 +9,7 @@ import torch
 
 class ModelConfig(object):
     embedding_dim = 128
-    vocab_size = 10000
+    vocab_size = 10002
     num_filters = 100
     kernel_sizes = [3, 4, 5]
     dropout_prob = 0.5
@@ -39,6 +39,7 @@ class TextCNN(nn.Module):
         :param inputs: [bs x seq]
         :return:
         """
+        # [bs x embed_dim x seq_len]
         e = torch.einsum('ijk->ikj', self.embedding(inputs))
         r = [F.relu(F.max_pool1d(conv(e), self.config.max_len - nf + 1)).squeeze(dim=2)
              for conv, nf in zip(self.convs, self.ks)]

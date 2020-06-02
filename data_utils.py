@@ -7,7 +7,7 @@ from konlpy.tag import Mecab
 from torchtext.data import TabularDataset, Iterator
 
 
-def get_dataloader(data_path, bs):
+def get_dataloader(data_path, bs, seq_len):
     mecab = Mecab()
 
     ID = data.Field(sequential=False,
@@ -18,7 +18,7 @@ def get_dataloader(data_path, bs):
                       tokenize=mecab.morphs,
                       lower=True,
                       batch_first=True,
-                      fix_length=40)
+                      fix_length=seq_len)
 
     LABEL = data.Field(sequential=False,
                        use_vocab=False,
@@ -34,3 +34,8 @@ def get_dataloader(data_path, bs):
     test_loader = Iterator(test_data, batch_size=bs)
 
     return train_loader, test_loader, TEXT.vocab
+
+
+if __name__ == '__main__':
+    train_loader, test_loader, vocab = get_dataloader('./rsc/data/', 32, 50)
+    print(len(vocab.stoi))
